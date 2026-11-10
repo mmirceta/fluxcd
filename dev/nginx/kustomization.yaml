@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/nginx
+patches:
+  # external-dns publishes dev.mapko.dev from this hostname.
+  - target:
+      kind: HTTPRoute
+      name: nginx
+    patch: |
+      - op: add
+        path: /spec/hostnames
+        value:
+          - dev.mapko.dev

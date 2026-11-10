@@ -1,0 +1,8 @@
+# Everything Flux applies on aks-dev-training. Terraform
+# (devops-training-project, landing-zone/k8s/dev/07-flux) points the
+# flux-system Kustomization at this folder; add an app by listing it here.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - nginx
+  - apache
