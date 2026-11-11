@@ -1,0 +1,35 @@
+# Login identity for Headlamp. Read-only on the whole cluster (view, which
+# excludes Secrets) plus edit on Flux objects, so the Flux plugin can
+# trigger reconcile / suspend / resume. Get a short-lived token with:
+#   kubectl -n headlamp create token headlamp-user
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: headlamp-user
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: headlamp-user-view
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+  - kind: ServiceAccount
+    name: headlamp-user
+    namespace: headlamp
+---
+# flux-edit is created by the flux2 chart.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: headlamp-user-flux-edit
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: flux-edit
+subjects:
+  - kind: ServiceAccount
+    name: headlamp-user
+    namespace: headlamp
