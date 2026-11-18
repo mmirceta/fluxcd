@@ -1,6 +1,6 @@
 # Headlamp: Kubernetes web UI, with the Flux plugin. Installed by Flux's
 # helm-controller (enabled in devops-training-project modules/k8s/flux).
-# No Ingress/HTTPRoute: reach it with kubectl port-forward through Bastion.
+# Exposed through the shared Gateway by httproute.yaml (HTTPS only).
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
