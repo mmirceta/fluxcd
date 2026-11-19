@@ -1,6 +1,7 @@
 # Login identity for Headlamp. Read-only on the whole cluster (view, which
 # excludes Secrets, plus metrics.k8s.io for CPU/memory usage) plus edit on
-# Flux objects, so the Flux plugin can trigger reconcile / suspend / resume. Get a short-lived token with:
+# Flux objects, so the Flux plugin can trigger reconcile / suspend / resume.
+# Get a short-lived token with:
 #   kubectl -n headlamp create token headlamp-user
 apiVersion: v1
 kind: ServiceAccount
