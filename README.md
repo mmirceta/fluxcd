@@ -48,8 +48,11 @@ az network bastion tunnel --name bas-dev-training --resource-group rg-devops-tra
   --target-resource-id <vm-bastion-dev resource id> --resource-port 8080 --port 8080
 ```
 
-Open https://flux.mapko.dev (or http://localhost:8080) and paste the token. `headlamp-user` can read
-everything except Secrets and can reconcile / suspend / resume Flux objects.
+Open https://flux.mapko.dev (or http://localhost:8080) and paste the token.
+`headlamp-user` has `edit` in every namespace (including Secrets, but not
+RBAC) and can reconcile / suspend / resume Flux objects. Edits to anything
+that comes from this repo are reverted on Flux's next sync; suspend the
+Kustomization first for a temporary experiment.
 
 ## Useful commands
 
