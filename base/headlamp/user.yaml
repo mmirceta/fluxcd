@@ -1,21 +1,24 @@
-# Login identity for Headlamp. Read-only on the whole cluster (view, which
-# excludes Secrets, plus metrics.k8s.io for CPU/memory usage) plus edit on
-# Flux objects, so the Flux plugin can trigger reconcile / suspend / resume.
-# Get a short-lived token with:
+# Login identity for Headlamp. edit in every namespace (create/update/delete
+# workloads, including Secrets; no RBAC or namespace changes), metrics.k8s.io
+# for CPU/memory usage, and edit on Flux objects so the Flux plugin can
+# trigger reconcile / suspend / resume. Objects that come from this repo are
+# reverted by Flux on its next sync. Get a short-lived token with:
 #   kubectl -n headlamp create token headlamp-user
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: headlamp-user
 ---
+# New name rather than changing headlamp-user-view: a binding's roleRef is
+# immutable, so Flux couldn't update it in place. Prune removes the old one.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: headlamp-user-view
+  name: headlamp-user-edit
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: view
+  name: edit
 subjects:
   - kind: ServiceAccount
     name: headlamp-user
@@ -35,7 +38,7 @@ subjects:
     name: headlamp-user
     namespace: headlamp
 ---
-# view doesn't cover metrics.k8s.io on AKS; Headlamp needs it for node and
+# view/edit don't cover metrics.k8s.io on AKS; Headlamp needs it for node and
 # pod CPU/memory usage.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
